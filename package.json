@@ -1,0 +1,12 @@
+{
+  "name": "ecommocean-website",
+  "version": "2.0.0",
+  "description": "EcommOcean website — static front-end + zero-dependency Node.js lead-capture backend",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": { "node": ">=18" },
+  "dependencies": {}
+}
