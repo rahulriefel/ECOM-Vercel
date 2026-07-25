@@ -1,0 +1,47 @@
+ECOMMOCEAN — FINAL VERCEL PACKAGE
+=================================
+
+Your GitHub repo (ECOM-Vercel) should contain EXACTLY these files at its
+top level — nothing else:
+
+  index.html
+  privacy.html
+  terms.html
+  404.html
+  config.js
+  robots.txt
+  sitemap.xml
+  css/        (styles.css)
+  js/         (main.js)
+  api/        (lead.js)      <- becomes the form backend on Vercel
+  lib/        (smtp.js)
+  vercel.json
+
+STEP 1 — Clean the repo (github.com/rahulriefel/ECOM-Vercel):
+  Delete these from the repo:  public/ (whole folder), server.js,
+  package.json, README.md (optional to keep), and any old api/, lib/,
+  vercel.json at the root.
+  (To delete a folder on GitHub: open the folder -> "..." menu top-right
+   -> Delete directory -> commit.)
+  IMPORTANT: the "public" folder MUST be deleted. If a public folder
+  exists, Vercel ignores everything else.
+
+STEP 2 — Upload this package:
+  Repo -> "Add file" -> "Upload files" -> drag ALL contents of this zip
+  (the files and folders themselves, not the zip) -> commit.
+
+STEP 3 — Check Vercel project settings (Settings -> Build and Deployment):
+  Framework Preset  = Other
+  Root Directory    = (empty)
+  Build Command / Output Directory / Install Command = overrides OFF
+
+STEP 4 — Vercel will auto-deploy the commit. Then open:
+  https://ecom-vercel-lemon.vercel.app/api/lead
+  CORRECT  -> {"ok":false,"error":"Method not allowed"}
+  WRONG    -> 404 page (send Claude a screenshot of Settings -> Build
+              and Deployment and the Deployments tab)
+
+STEP 5 — Emails: keep the environment variables you already added
+  (LEAD_TO_EMAIL, SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS with your
+  Gmail App Password). They apply automatically to the new deployment.
+  Submit a test on the site -> green message -> lead in your Gmail.
