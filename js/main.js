@@ -74,40 +74,66 @@
       { n: "Home Depot", s: "Pro-grade listings, bulk and B2B merchandising for home improvement." }
     ]}
   ];
-  var mktList = $("#mktList"), mktDetail = $("#mktDetail");
-  if (mktList && mktDetail) {
-    var allPills = [];
+  var mktTabs = $("#mktTabs"), mktList = $("#mktList"), mktDetail = $("#mktDetail"), mktNote = $("#mktNote");
+  if (mktTabs && mktList && mktDetail) {
     var showMarket = function (m) {
       mktDetail.innerHTML =
         '<h3><span class="d" aria-hidden="true"></span>' + m.n + "</h3><p>" + m.s + "</p>";
+      mktDetail.classList.remove("show");
+      void mktDetail.offsetWidth; // restart the entrance animation
+      mktDetail.classList.add("show");
     };
-    MARKET_GROUPS.forEach(function (group, gi) {
-      var wrap = document.createElement("div");
-      wrap.className = "mkt-group";
-      var lbl = document.createElement("p");
-      lbl.className = "mkt-region";
-      lbl.innerHTML = group.region + " <span>" + group.note + "</span>";
-      wrap.appendChild(lbl);
-      var row = document.createElement("div");
-      row.className = "mkt-list";
+    var renderRegion = function (gi) {
+      var group = MARKET_GROUPS[gi];
+      if (mktNote) mktNote.textContent = group.note + " · " + group.markets.length + " channels";
+      mktList.innerHTML = "";
       group.markets.forEach(function (m, i) {
         var b = document.createElement("button");
         b.type = "button";
         b.className = "mkt-pill";
         b.textContent = m.n;
-        b.setAttribute("aria-pressed", (gi === 0 && i === 0) ? "true" : "false");
+        b.style.animationDelay = (i * 45) + "ms";
+        b.setAttribute("aria-pressed", i === 0 ? "true" : "false");
         b.addEventListener("click", function () {
-          allPills.forEach(function (p) { p.setAttribute("aria-pressed", "false"); });
+          $$(".mkt-pill", mktList).forEach(function (p) { p.setAttribute("aria-pressed", "false"); });
           b.setAttribute("aria-pressed", "true");
           showMarket(m);
         });
-        row.appendChild(b);
-        allPills.push(b);
+        mktList.appendChild(b);
       });
-      wrap.appendChild(row);
-      mktList.appendChild(wrap);
+      showMarket(group.markets[0]);
+    };
+    var mktTabBtns = MARKET_GROUPS.map(function (group, gi) {
+      var t = document.createElement("button");
+      t.type = "button";
+      t.className = "seg-btn";
+      t.textContent = group.region;
+      t.setAttribute("role", "tab");
+      t.setAttribute("aria-selected", gi === 0 ? "true" : "false");
+      t.addEventListener("click", function () {
+        mktTabBtns.forEach(function (x) { x.setAttribute("aria-selected", "false"); });
+        t.setAttribute("aria-selected", "true");
+        renderRegion(gi);
+      });
+      mktTabs.appendChild(t);
+      return t;
     });
-    showMarket(MARKET_GROUPS[0].markets[0]);
+    renderRegion(0);
+  }
+
+  /* ---------- pricing region tabs ---------- */
+  var priceTabs = $$("#priceTabs .seg-btn"), priceNote = $("#priceNote");
+  if (priceTabs.length) {
+    var pPanels = $$("[data-ppanel]");
+    priceTabs.forEach(function (t) {
+      t.addEventListener("click", function () {
+        var key = t.getAttribute("data-ptab");
+        priceTabs.forEach(function (x) { x.setAttribute("aria-selected", "false"); });
+        t.setAttribute("aria-selected", "true");
+        if (priceNote) priceNote.textContent = t.getAttribute("data-note") || "";
+        pPanels.forEach(function (p) { p.hidden = (p.getAttribute("data-ppanel") !== key); });
+      });
+    });
   }
 
   /* ---------- plan pre-fill: clicking a plan CTA notes the plan ---------- */
