@@ -277,7 +277,9 @@
         <p>Launch, listings, advertising, account health and growth — handled end to end on the channels your customers already shop. Pick a marketplace to see what we do there.</p>
       </div>
       <div class="reveal">
-        <div class="mkt-groups" id="mktList" role="group" aria-label="Choose a marketplace"></div>
+        <div class="seg" id="mktTabs" role="tablist" aria-label="Choose a region"></div>
+        <p class="region-note" id="mktNote"></p>
+        <div class="mkt-list" id="mktList" role="group" aria-label="Choose a marketplace"></div>
         <div class="mkt-detail card" id="mktDetail" aria-live="polite"></div>
       </div>
     </div>
@@ -292,8 +294,14 @@
       <h2>Fixed plans, published openly</h2>
       <p>Marketplace management runs on flat plans — no percentage-of-ad-spend games. Choose the region you sell in; website and app projects are quoted per project after a free scoping call.</p>
     </div>
-    <p class="price-region reveal">India marketplaces <span>Amazon · Flipkart · Meesho · Myntra · Ajio · Blinkit · JioMart · eBay</span></p>
-    <div class="plans">
+    <div class="seg-wrap reveal">
+      <div class="seg" id="priceTabs" role="tablist" aria-label="Choose a region">
+        <button class="seg-btn" type="button" role="tab" data-ptab="india" aria-selected="true" data-note="Amazon · Flipkart · Meesho · Myntra · Ajio · Blinkit · JioMart · eBay">India</button>
+        <button class="seg-btn" type="button" role="tab" data-ptab="global" aria-selected="false" data-note="Amazon · Walmart · Wayfair · Target+ · JCPenney · Kohl's · Lowe's · Macy's · Home Depot">Global</button>
+      </div>
+    </div>
+    <p class="region-note center reveal" id="priceNote">Amazon · Flipkart · Meesho · Myntra · Ajio · Blinkit · JioMart · eBay</p>
+    <div class="plans" data-ppanel="india">
       <div class="card plan reveal">
         <h3>Launch</h3>
         <p class="desc">Get live and selling on your first marketplace, fast.</p>
@@ -334,13 +342,12 @@
       </div>
     </div>
 
-    <p class="price-region reveal" style="margin-top:var(--s12)">Global marketplaces <span>Amazon · Walmart · Wayfair · Target+ · JCPenney · Kohl's · Lowe's · Macy's · Home Depot</span></p>
-    <div class="plans duo">
+    <div class="plans duo" data-ppanel="global" hidden>
       <div class="card plan reveal">
         <p class="flag">50% off</p>
-        <h3>Global Account Launch</h3>
+        <h3>Account Launch</h3>
         <p class="desc">One-time setup to get your brand live and selling on a global marketplace.</p>
-        <p class="price"><span class="was">₹13,998</span>₹6,999 <small>· one-time</small></p>
+        <p class="price"><span class="was">₹14,000</span>₹6,999 <small>· one-time</small></p>
         <ul>
           <li><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12l5 5L20 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Account setup &amp; verification on one global marketplace</li>
           <li><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12l5 5L20 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Brand registry &amp; compliance paperwork</li>
@@ -351,9 +358,9 @@
       </div>
       <div class="card plan feat reveal">
         <p class="flag">50% off</p>
-        <h3>Global Marketplace Management</h3>
+        <h3>Marketplace Management</h3>
         <p class="desc">Ongoing management to grow revenue, rank and profit across global channels.</p>
-        <p class="price"><span class="was">₹30,000</span>₹15,000 <small>/ month</small></p>
+        <p class="price"><span class="was">₹30,000</span>₹14,999 <small>/ month</small></p>
         <ul>
           <li><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12l5 5L20 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Everything in Account Launch, ongoing</li>
           <li><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12l5 5L20 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Ads management (Sponsored &amp; PPC)</li>
