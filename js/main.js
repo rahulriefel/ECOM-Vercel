@@ -136,6 +136,26 @@
     });
   }
 
+  /* ---------- roving arrow-key navigation for tablists (WCAG a11y) ---------- */
+  document.addEventListener("keydown", function (e) {
+    var tab = e.target && e.target.closest ? e.target.closest('[role="tab"]') : null;
+    if (!tab) return;
+    var list = tab.closest('[role="tablist"]');
+    if (!list) return;
+    var tabs = $$('[role="tab"]', list);
+    var i = tabs.indexOf(tab);
+    if (i < 0) return;
+    var next = null;
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") next = tabs[(i + 1) % tabs.length];
+    else if (e.key === "ArrowLeft" || e.key === "ArrowUp") next = tabs[(i - 1 + tabs.length) % tabs.length];
+    else if (e.key === "Home") next = tabs[0];
+    else if (e.key === "End") next = tabs[tabs.length - 1];
+    if (!next) return;
+    e.preventDefault();
+    next.focus();
+    next.click();
+  });
+
   /* ---------- plan pre-fill: clicking a plan CTA notes the plan ---------- */
   var planField = $("#f-plan");
   $$("a[data-plan]").forEach(function (a) {

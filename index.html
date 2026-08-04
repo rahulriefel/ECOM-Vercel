@@ -30,14 +30,36 @@
 <script type="application/ld+json">
 {
   "@context":"https://schema.org",
-  "@type":"ProfessionalService",
-  "name":"EcommOcean",
-  "url":"https://www.ecommocean.in/",
-  "email":"rahulmishra2697@gmail.com",
-  "telephone":"+91-79823-56032",
-  "address":{"@type":"PostalAddress","addressLocality":"New Delhi","addressCountry":"IN"},
-  "description":"Web development, app development, e-commerce and marketplace management agency.",
-  "areaServed":["IN","US"]
+  "@graph":[
+    {
+      "@type":"ProfessionalService",
+      "@id":"https://www.ecommocean.in/#org",
+      "name":"EcommOcean",
+      "url":"https://www.ecommocean.in/",
+      "logo":"https://www.ecommocean.in/logo.png",
+      "image":"https://www.ecommocean.in/og-image.png",
+      "email":"rahulmishra2697@gmail.com",
+      "telephone":"+91-79823-56032",
+      "priceRange":"₹₹",
+      "address":{"@type":"PostalAddress","addressLocality":"New Delhi","addressRegion":"DL","addressCountry":"IN"},
+      "areaServed":["IN","US"],
+      "description":"Web development, app development, e-commerce and marketplace management agency in New Delhi, serving sellers across India and the US.",
+      "contactPoint":{"@type":"ContactPoint","telephone":"+91-79823-56032","contactType":"sales","areaServed":["IN","US"],"availableLanguage":["en","hi"]},
+      "sameAs":["https://www.instagram.com/ecommoceans/","https://www.linkedin.com/in/rahul-mishra-0aba1419b/"]
+    },
+    {
+      "@type":"WebSite",
+      "@id":"https://www.ecommocean.in/#website",
+      "url":"https://www.ecommocean.in/",
+      "name":"EcommOcean",
+      "inLanguage":"en-IN",
+      "publisher":{"@id":"https://www.ecommocean.in/#org"}
+    },
+    {"@type":"Service","serviceType":"Marketplace management","provider":{"@id":"https://www.ecommocean.in/#org"},"areaServed":["IN","US"],"description":"Full account management across Amazon, Flipkart, Walmart, Meesho and 12 more marketplaces — listings, advertising, account health and growth."},
+    {"@type":"Service","serviceType":"Website & app development","provider":{"@id":"https://www.ecommocean.in/#org"},"areaServed":["IN","US"],"description":"Custom websites, web apps and iOS/Android apps built with fast, SEO-ready stacks."},
+    {"@type":"Service","serviceType":"E-commerce development","provider":{"@id":"https://www.ecommocean.in/#org"},"areaServed":["IN","US"],"description":"High-converting Shopify, WooCommerce and custom online stores."},
+    {"@type":"Service","serviceType":"Digital marketing & SEO","provider":{"@id":"https://www.ecommocean.in/#org"},"areaServed":["IN","US"],"description":"Performance marketing across Google, Meta and YouTube, plus technical, on-page and content SEO."}
+  ]
 }
 </script>
 <script type="application/ld+json">
@@ -560,10 +582,8 @@
         <a class="brand" href="/"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 3 L42.2 13.5 L24 24 L5.8 13.5 Z" fill="url(#lg-t)"/><path d="M42.2 13.5 L42.2 34.5 L24 45 L24 24 Z" fill="url(#lg-r)"/><path d="M5.8 13.5 L24 24 L24 45 L5.8 34.5 Z" fill="url(#lg-l)"/><path d="M26.9 32 A8.5 8.5 0 1 1 32 26.9" fill="none" stroke="#1B0E26" stroke-width="4.6" stroke-linecap="round"/><path d="M15.5 24 H31.5" stroke="#1B0E26" stroke-width="4.6" stroke-linecap="round"/></svg><span>ecomm<span class="o">ocean</span></span></a>
         <p>Websites, apps and full marketplace management for brands that sell online. New Delhi, serving sellers worldwide.</p>
         <div class="socials">
-          <a href="https://x.com/" aria-label="EcommOcean on X" rel="noopener" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22l-7.1 8.1L23 22h-6.5l-5-6.6L5.7 22H2.5l7.6-8.7L1.7 2h6.7l4.5 6 5.9-6zm-2.3 18h1.9L7.5 4H5.5l11.1 16z"/></svg></a>
-          <a href="https://www.linkedin.com/" aria-label="EcommOcean on LinkedIn" rel="noopener" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.9 8.5v10.6H3.6V8.5h3.3zM5.2 3.3a1.9 1.9 0 110 3.8 1.9 1.9 0 010-3.8zM20.4 19.1h-3.3v-5.5c0-1.4-.5-2.3-1.7-2.3-.9 0-1.5.6-1.7 1.2-.1.2-.1.5-.1.8v5.8H9.3s.04-9.4 0-10.6h3.3v1.5c.4-.7 1.2-1.7 3-1.7 2.2 0 3.8 1.4 3.8 4.5v6.3z"/></svg></a>
-          <a href="https://www.instagram.com/" aria-label="EcommOcean on Instagram" rel="noopener" target="_blank"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/></svg></a>
-          <a href="https://www.youtube.com/" aria-label="EcommOcean on YouTube" rel="noopener" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23 12s0-3.2-.4-4.7a2.5 2.5 0 00-1.7-1.7C19.3 5.2 12 5.2 12 5.2s-7.3 0-8.9.4A2.5 2.5 0 001.4 7.3C1 8.8 1 12 1 12s0 3.2.4 4.7a2.5 2.5 0 001.7 1.7c1.6.4 8.9.4 8.9.4s7.3 0 8.9-.4a2.5 2.5 0 001.7-1.7C23 15.2 23 12 23 12z"/></svg></a>
+          <a href="https://www.linkedin.com/in/rahul-mishra-0aba1419b/" aria-label="EcommOcean on LinkedIn" rel="me noopener" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.9 8.5v10.6H3.6V8.5h3.3zM5.2 3.3a1.9 1.9 0 110 3.8 1.9 1.9 0 010-3.8zM20.4 19.1h-3.3v-5.5c0-1.4-.5-2.3-1.7-2.3-.9 0-1.5.6-1.7 1.2-.1.2-.1.5-.1.8v5.8H9.3s.04-9.4 0-10.6h3.3v1.5c.4-.7 1.2-1.7 3-1.7 2.2 0 3.8 1.4 3.8 4.5v6.3z"/></svg></a>
+          <a href="https://www.instagram.com/ecommoceans/" aria-label="EcommOcean on Instagram" rel="me noopener" target="_blank"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/></svg></a>
         </div>
       </div>
       <nav class="f-col" aria-label="Services">
