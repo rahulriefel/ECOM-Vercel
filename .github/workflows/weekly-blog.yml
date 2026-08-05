@@ -25,10 +25,7 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Generate post
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          BLOG_MODEL: ${{ vars.BLOG_MODEL }}   # optional override, defaults to gemini-2.0-flash
+      - name: Publish next queued post
         run: node scripts/generate-post.mjs
 
       - name: Commit & push

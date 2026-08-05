@@ -1,93 +1,46 @@
-// Weekly blog post generator for EcommOcean.
-// Runs in GitHub Actions. Calls the Anthropic API, renders a post into the
-// site's blog template, and updates the blog index + sitemap.
-// Requires env: ANTHROPIC_API_KEY. Optional: BLOG_MODEL (default claude-sonnet-5).
+// Weekly blog publisher for EcommOcean — NO external API, fully free.
+// Publishes the next unpublished post from content/blog-queue.json into the
+// site's blog template, then updates the blog index + sitemap.
+// Runs in GitHub Actions on a schedule. Refill the queue file anytime.
 
 import { readFileSync, writeFileSync, mkdirSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-
-const API_KEY = process.env.GEMINI_API_KEY;
-const MODEL = process.env.BLOG_MODEL || 'gemini-2.0-flash';
-if (!API_KEY) { console.error('Missing GEMINI_API_KEY secret.'); process.exit(1); }
 
 const ROOT = process.cwd();
 const BLOG = join(ROOT, 'blog');
 const ORIGIN = 'https://www.ecommocean.in';
 const CATEGORIES = ['Marketplaces', 'E-commerce', 'Advertising', 'Operations', 'SEO'];
 
-// ---- gather existing posts so we never repeat a topic ----
+const kebab = s => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60);
+
+// already-published slugs (a post is "published" once its blog/<slug>/ dir exists)
 const existingSlugs = readdirSync(BLOG, { withFileTypes: true }).filter(d => d.isDirectory()).map(d => d.name);
-const existingTitles = [];
-for (const s of existingSlugs) {
-  try {
-    const m = readFileSync(join(BLOG, s, 'index.html'), 'utf8').match(/<h1>([^<]+)<\/h1>/);
-    if (m) existingTitles.push(m[1].replace(/&amp;/g, '&'));
-  } catch {}
-}
+
+// load the queue
+let queue;
+try { queue = JSON.parse(readFileSync(join(ROOT, 'content', 'blog-queue.json'), 'utf8')); }
+catch (e) { console.error('Could not read content/blog-queue.json:', e.message); process.exit(1); }
+if (!Array.isArray(queue) || !queue.length) { console.error('Queue is empty or invalid.'); process.exit(1); }
+
+// pick the first queued post that hasn't been published yet
+const post = queue.find(p => p && p.slug && !existingSlugs.includes(kebab(p.slug)));
+if (!post) { console.log('Queue exhausted — every post is already published. Add more to content/blog-queue.json.'); process.exit(0); }
 
 const today = new Date();
 const dateISO = today.toISOString().slice(0, 10);
 const dateHuman = today.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
-const prompt = `You write for EcommOcean (ecommocean.in), a New Delhi marketplace & e-commerce management agency serving sellers in India and the US. It builds websites/apps/stores and manages brands across Amazon, Flipkart, Meesho, Myntra, Ajio, Blinkit, JioMart, eBay, Walmart, Wayfair, Target Plus and more.
-
-Write ONE fresh, genuinely useful blog post for Indian D2C and marketplace sellers.
-
-Avoid repeating any of these already-published topics:
-${existingTitles.map(t => '- ' + t).join('\n')}
-
-Hard rules:
-- Practical, accurate, evergreen (how-to / explainer / comparison / checklist).
-- NO fabricated statistics, NO fake testimonials, NO invented client names or specific unverifiable numbers. Ranges and general guidance are fine.
-- Indian-seller context where relevant (GST, COD/RTO, festive events, rupee).
-- 700-1000 words.
-- Include 2-4 internal links using these exact paths where they fit naturally: /services/marketplace-management/, /services/ecommerce-development/, /services/digital-marketing/, /marketplaces/amazon/, /marketplaces/flipkart/, /marketplaces/meesho/, /#pricing, /#audit.
-
-Return ONLY valid JSON (no markdown, no code fence), with exactly these keys:
-{
- "title": "string, <=68 chars, no year, plain text",
- "slug": "kebab-case-string, 3-7 words, no year",
- "metaDescription": "string, <=155 chars, plain text",
- "category": "one of: Marketplaces | E-commerce | Advertising | Operations | SEO",
- "readMinutes": 7,
- "bodyHtml": "the article body only"
-}
-bodyHtml must use only these tags: <h2> <h3> <p> <ul> <li> <strong> <a>. Do NOT include <h1>, <html>, <head>, <script>, <style>, <img>, tables, external links, or a closing call-to-action (the page template adds one).`;
-
-const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
-const res = await fetch(endpoint, {
-  method: 'POST',
-  headers: { 'content-type': 'application/json' },
-  body: JSON.stringify({
-    contents: [{ parts: [{ text: prompt }] }],
-    generationConfig: { temperature: 0.7, maxOutputTokens: 4000, responseMimeType: 'application/json' }
-  })
-});
-if (!res.ok) { console.error('Gemini API error', res.status, await res.text()); process.exit(1); }
-const data = await res.json();
-const cand = (data.candidates || [])[0];
-if (!cand || !cand.content) { console.error('No content returned (possible safety block):', JSON.stringify(data).slice(0, 400)); process.exit(1); }
-let text = (cand.content.parts || []).map(p => p.text || '').join('').trim();
-
-let post;
-try { post = JSON.parse(text.slice(text.indexOf('{'), text.lastIndexOf('}') + 1)); }
-catch (e) { console.error('Could not parse model JSON:\n', text.slice(0, 800)); process.exit(1); }
-
 // ---- validate & sanitise ----
-let slug = String(post.slug || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60);
-if (!slug) { console.error('No usable slug.'); process.exit(1); }
-if (existingSlugs.includes(slug)) { console.log('Slug already exists, skipping to avoid duplicate:', slug); process.exit(0); }
-
+const slug = kebab(post.slug);
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const title = String(post.title || 'Untitled').replace(/[<>]/g, '').trim().slice(0, 90);
 const metaDesc = String(post.metaDescription || '').replace(/[<>"]/g, '').trim().slice(0, 158);
 const category = CATEGORIES.includes(post.category) ? post.category : 'Marketplaces';
 const readMin = Number.isInteger(post.readMinutes) && post.readMinutes >= 5 && post.readMinutes <= 12 ? post.readMinutes : 7;
-// allow only a safe subset of tags in the body
 let body = String(post.bodyHtml || '')
-  .replace(/<\/?(script|style|iframe|img|object|embed|link|meta|table|thead|tbody|tr|td|th)[^>]*>/gi, '')
+  .replace(/<\/?(script|style|iframe|img|object|embed|link|meta)[^>]*>/gi, '')
   .replace(/ on\w+="[^"]*"/gi, '');
-if (body.length < 400) { console.error('Body too short, aborting.'); process.exit(1); }
+if (body.length < 300) { console.error('Body too short for', slug, '— aborting.'); process.exit(1); }
 
 const url = `${ORIGIN}/blog/${slug}/`;
 const jsonLd = JSON.stringify({
@@ -177,7 +130,7 @@ const page = `<!DOCTYPE html>
 mkdirSync(join(BLOG, slug), { recursive: true });
 writeFileSync(join(BLOG, slug, 'index.html'), page, 'utf8');
 
-// ---- insert a card at the top of the blog index ----
+// insert a card at the top of the blog index
 let idx = readFileSync(join(BLOG, 'index.html'), 'utf8');
 const card = `      <div class="post-list">
         <article class="post-card">
@@ -193,11 +146,11 @@ if (idx.includes('<div class="post-list">')) {
   writeFileSync(join(BLOG, 'index.html'), idx, 'utf8');
 }
 
-// ---- add to sitemap ----
+// add to sitemap
 let sm = readFileSync(join(ROOT, 'sitemap.xml'), 'utf8');
 if (!sm.includes(`/blog/${slug}/`)) {
   sm = sm.replace('</urlset>', `  <url><loc>${url}</loc><lastmod>${dateISO}</lastmod><changefreq>yearly</changefreq><priority>0.6</priority></url>\n</urlset>`);
   writeFileSync(join(ROOT, 'sitemap.xml'), sm, 'utf8');
 }
 
-console.log('Published new post:', slug, '—', title);
+console.log('Published from queue:', slug, '—', title);
