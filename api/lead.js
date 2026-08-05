@@ -117,6 +117,40 @@ module.exports = async (req, res) => {
     );
   }
 
+  // 1b) Auto-reply / follow-up to the person who filled the form
+  if (SMTP_OK && lead.type !== "newsletter" && EMAIL_RE.test(lead.email)) {
+    const firstName = (lead.name || "there").split(" ")[0];
+    const reply = [
+      "Hi " + firstName + ",",
+      "",
+      "Thanks for reaching out to EcommOcean — we've received your message and a member of our team will get back to you within one business day.",
+      "",
+      "We help brands build their store and grow across Amazon, Flipkart, Walmart and 13+ more marketplaces. If it's urgent, WhatsApp us at +91 79823 56032, or just reply to this email.",
+      "",
+      "Talk soon,",
+      "Team EcommOcean",
+      "https://www.ecommocean.in"
+    ].join("\n");
+    results.push(
+      sendMail(
+        {
+          host: process.env.SMTP_HOST,
+          port: process.env.SMTP_PORT || 587,
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS,
+          starttls: process.env.SMTP_STARTTLS !== "false"
+        },
+        {
+          from: process.env.SMTP_FROM || process.env.SMTP_USER,
+          to: lead.email,
+          replyTo: process.env.LEAD_TO_EMAIL || "rahulmishra2697@gmail.com",
+          subject: "Thanks for contacting EcommOcean — we'll be in touch",
+          text: reply
+        }
+      ).then(() => "autoreply:sent", (e) => { console.error("[autoreply]", e.message); return "autoreply:failed"; })
+    );
+  }
+
   // 2) Optional webhook (Google Apps Script / Zapier / Make → Google Sheet)
   if (process.env.LEADS_WEBHOOK_URL) {
     results.push(
