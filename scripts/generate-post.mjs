@@ -6,9 +6,9 @@
 import { readFileSync, writeFileSync, mkdirSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
-const API_KEY = process.env.ANTHROPIC_API_KEY;
-const MODEL = process.env.BLOG_MODEL || 'claude-sonnet-5';
-if (!API_KEY) { console.error('Missing ANTHROPIC_API_KEY secret.'); process.exit(1); }
+const API_KEY = process.env.GEMINI_API_KEY;
+const MODEL = process.env.BLOG_MODEL || 'gemini-2.0-flash';
+if (!API_KEY) { console.error('Missing GEMINI_API_KEY secret.'); process.exit(1); }
 
 const ROOT = process.cwd();
 const BLOG = join(ROOT, 'blog');
@@ -54,14 +54,20 @@ Return ONLY valid JSON (no markdown, no code fence), with exactly these keys:
 }
 bodyHtml must use only these tags: <h2> <h3> <p> <ul> <li> <strong> <a>. Do NOT include <h1>, <html>, <head>, <script>, <style>, <img>, tables, external links, or a closing call-to-action (the page template adds one).`;
 
-const res = await fetch('https://api.anthropic.com/v1/messages', {
+const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
+const res = await fetch(endpoint, {
   method: 'POST',
-  headers: { 'x-api-key': API_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
-  body: JSON.stringify({ model: MODEL, max_tokens: 3500, temperature: 0.7, messages: [{ role: 'user', content: prompt }] })
+  headers: { 'content-type': 'application/json' },
+  body: JSON.stringify({
+    contents: [{ parts: [{ text: prompt }] }],
+    generationConfig: { temperature: 0.7, maxOutputTokens: 4000, responseMimeType: 'application/json' }
+  })
 });
-if (!res.ok) { console.error('Anthropic API error', res.status, await res.text()); process.exit(1); }
+if (!res.ok) { console.error('Gemini API error', res.status, await res.text()); process.exit(1); }
 const data = await res.json();
-let text = (data.content || []).map(c => c.text || '').join('').trim();
+const cand = (data.candidates || [])[0];
+if (!cand || !cand.content) { console.error('No content returned (possible safety block):', JSON.stringify(data).slice(0, 400)); process.exit(1); }
+let text = (cand.content.parts || []).map(p => p.text || '').join('').trim();
 
 let post;
 try { post = JSON.parse(text.slice(text.indexOf('{'), text.lastIndexOf('}') + 1)); }
