@@ -34,7 +34,7 @@ const dateHuman = today.toLocaleDateString('en-GB', { day: 'numeric', month: 'lo
 const slug = kebab(post.slug);
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const title = String(post.title || 'Untitled').replace(/[<>]/g, '').trim().slice(0, 90);
-const metaDesc = String(post.metaDescription || '').replace(/[<>"]/g, '').trim().slice(0, 158);
+const metaDesc = String(post.metaDescription || '').replace(/[<>"]/g, '').trim().slice(0, 155);
 const category = CATEGORIES.includes(post.category) ? post.category : 'Marketplaces';
 const readMin = Number.isInteger(post.readMinutes) && post.readMinutes >= 5 && post.readMinutes <= 12 ? post.readMinutes : 7;
 let body = String(post.bodyHtml || '')
@@ -53,7 +53,7 @@ const jsonLd = JSON.stringify({
     { '@type': 'BlogPosting', '@id': url + '#article', headline: title, description: metaDesc,
       image: ORIGIN + '/og-image.png', datePublished: dateISO, dateModified: dateISO, inLanguage: 'en-IN',
       mainEntityOfPage: url,
-      author: { '@type': 'Person', name: 'Rahul Mishra', url: 'https://www.linkedin.com/in/rahul-mishra-0aba1419b/' },
+      author: { '@type': 'Person', '@id': ORIGIN + '/about/rahul-mishra/#person', name: 'Rahul Mishra', url: ORIGIN + '/about/rahul-mishra/' },
       publisher: { '@id': ORIGIN + '/#org' } }
   ]
 });
@@ -66,7 +66,7 @@ const page = `<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${esc(title)} | EcommOcean</title>
+<title>${esc(title)}</title>
 <meta name="description" content="${esc(metaDesc)}">
 <link rel="canonical" href="${url}">
 <meta name="theme-color" content="#03101C">
@@ -106,7 +106,7 @@ const page = `<!DOCTYPE html>
   <article class="article">
     <p class="label">${esc(category)}</p>
     <h1>${esc(title)}</h1>
-    <div class="byline"><span class="av" aria-hidden="true">RM</span><span>By <a href="https://www.linkedin.com/in/rahul-mishra-0aba1419b/" rel="author noopener" target="_blank">Rahul Mishra</a> · ${dateHuman} · ${readMin} min read</span></div>
+    <div class="byline"><span class="av" aria-hidden="true">RM</span><span>By <a href="/about/rahul-mishra/" rel="author">Rahul Mishra</a> · ${dateHuman} · ${readMin} min read</span></div>
     ${body}
     <div class="cta-box">
       <p style="margin:0 0 12px;color:#c9d5df">Want a hand putting this into practice? EcommOcean runs <a href="/services/marketplace-management/">marketplace management</a> across 16 channels, and every engagement starts with a free 48-hour audit.</p>
