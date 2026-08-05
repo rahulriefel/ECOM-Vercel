@@ -1,0 +1,44 @@
+name: Weekly blog post
+
+on:
+  schedule:
+    # Every Monday 04:30 UTC (~10:00 IST)
+    - cron: '30 4 * * 1'
+  workflow_dispatch: {}   # lets you run it manually from the Actions tab
+
+permissions:
+  contents: write
+
+concurrency:
+  group: weekly-blog
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate post
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          BLOG_MODEL: ${{ vars.BLOG_MODEL }}   # optional override, defaults to claude-sonnet-5
+        run: node scripts/generate-post.mjs
+
+      - name: Commit & push
+        run: |
+          git config user.name "EcommOcean Bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --staged --quiet; then
+            echo "No new post generated — nothing to commit."
+          else
+            git commit -m "chore(blog): weekly auto-generated post"
+            git push
+          fi
