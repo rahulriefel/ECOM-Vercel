@@ -77,7 +77,7 @@ const page = `<!DOCTYPE html>
 <meta property="og:image" content="${ORIGIN}/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="author" content="Rahul Mishra">
-<link rel="icon" href="${FAVICON}">
+<link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/styles.css">
