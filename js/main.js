@@ -198,6 +198,7 @@
         })
         .then(function () {
           form.reset();
+          if (window.va) window.va("event", { name: "lead_submit" });
           msg.className = "form-msg ok";
           msg.textContent = "Thanks, " + payload.name.split(" ")[0] + " — we got your message and will reply within one business day.";
         })
