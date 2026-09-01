@@ -119,7 +119,7 @@ const page = `<!DOCTYPE html>
   <nav class="f-col" aria-label="Services"><h4>Services</h4><a href="/services/marketplace-management/">Marketplace management</a><a href="/services/ecommerce-development/">E-commerce development</a><a href="/services/app-development/">App development</a><a href="/services/digital-marketing/">Digital marketing &amp; SEO</a></nav>
   <nav class="f-col" aria-label="Company"><h4>Company</h4><a href="/about/">About</a><a href="/blog/">Blog</a><a href="/#pricing">Pricing</a><a href="/#contact">Contact</a></nav>
   <nav class="f-col" aria-label="Legal"><h4>Legal</h4><a href="/privacy.html">Privacy policy</a><a href="/terms.html">Terms of service</a></nav>
-</div><div class="f-bottom"><span>© <span id="year">${today.getFullYear()}</span> EcommOcean. All rights reserved.</span><span><a href="tel:+917982356032">+91 79823 56032</a> · <a href="mailto:rahulmishra2697@gmail.com">rahulmishra2697@gmail.com</a></span></div></div></footer>
+</div><div class="f-bottom"><span>© <span id="year">${today.getFullYear()}</span> EcommOcean. All rights reserved.</span><span><a href="tel:+917982356032">+91 79823 56032</a> · <a href="mailto:rahul@ecommocean.in">rahul@ecommocean.in</a></span></div></div></footer>
 <script type="application/ld+json">${jsonLd}</script>
 <script src="/config.js"></script><script src="/js/main.js" defer></script>
 <script defer src="/_vercel/insights/script.js"></script><script defer src="/_vercel/speed-insights/script.js"></script>

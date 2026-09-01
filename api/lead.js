@@ -108,7 +108,7 @@ module.exports = async (req, res) => {
         },
         {
           from: process.env.SMTP_FROM || process.env.SMTP_USER,
-          to: process.env.LEAD_TO_EMAIL || "rahulmishra2697@gmail.com",
+          to: process.env.LEAD_TO_EMAIL || "rahul@ecommocean.in",
           replyTo: EMAIL_RE.test(lead.email) ? lead.email : undefined,
           subject: "[EcommOcean] New lead: " + (lead.name || lead.email || lead.phone),
           text
@@ -143,7 +143,7 @@ module.exports = async (req, res) => {
         {
           from: process.env.SMTP_FROM || process.env.SMTP_USER,
           to: lead.email,
-          replyTo: process.env.LEAD_TO_EMAIL || "rahulmishra2697@gmail.com",
+          replyTo: process.env.LEAD_TO_EMAIL || "rahul@ecommocean.in",
           subject: "Thanks for contacting EcommOcean — we'll be in touch",
           text: reply
         }
